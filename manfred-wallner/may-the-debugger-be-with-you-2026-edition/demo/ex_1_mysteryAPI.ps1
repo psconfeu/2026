@@ -31,7 +31,7 @@ $shoppingCart = @{
 
 $irmArgs = @{
   Uri         = "$BaseUrl/cart/total"
-  Method      = Post
+  Method      = 'Post'
   ContentType = 'application/json'
   Body        = ($shoppingCart | ConvertTo-Json -Depth 5)
 }
