@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maze Loot Game</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <main class="layout">
+        <div class="title-row">
+            <h1>⚔️ Maze Loot Game</h1>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">🌙 Dark</button>
+        </div>
+
+        <div id="errorBox" class="error-box" role="alert" aria-live="assertive" style="display:none"></div>
+
+        <p class="subhead">Browser UI &mdash; PowerShell simulation engine (Pode backend)</p>
+
+        <div class="section" id="selectPlayersSection">
+            <h2>Select Players</h2>
+            <p class="hint">Click a character to add them to the game.</p>
+            <div id="characters" class="characters">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Game Status &nbsp;<span id="statusBadge" class="status-badge status-idle">Idle</span></h2>
+
+            <div class="actions">
+                <button id="startBtn" class="primary">⚔️ Start Game</button>
+                <button id="resetBtn" disabled>↺ Reset</button>
+            </div>
+
+            <div class="update-speed" role="group" aria-label="Game speed">
+                <label for="gameSpeedDelayMs">Game speed delay</label>
+                <input id="gameSpeedDelayMs" type="range" min="10" max="1000" step="10" value="20">
+                <span id="gameSpeedDelayValue" aria-live="polite">20 ms</span>
+            </div>
+
+            <div class="progress-wrap" id="progressWrap" style="display:none">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-label" id="progressLabel">0 / 0 items looted</div>
+            </div>
+        </div>
+
+        <div class="section" id="resultsSection" style="display:none">
+            <h2 id="rankingsHeading">Results</h2>
+            <table class="results">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Items Looted</th>
+                        <th class="trend-col">Move</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>
