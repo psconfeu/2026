@@ -34,7 +34,11 @@ Then start the Mystery Shack API server before running the example:
 pwsh pode/mystery-shack/mystery_shack_pode.ps1
 ```
 
+If you can retrieve some JSON from `http://localhost:8181/items` you're all set.
+
 **Example 2** requires Docker. Please pull the base image during the first part or the break, so we don't all download it at the same time:
+
+> **Windows users:** you'll need WSL or Docker Desktop. If you're not familiar with either, feel free to just follow along for this part and run the other examples locally.
 
 ```pwsh
 docker pull mcr.microsoft.com/powershell:7.5-ubuntu-22.04
