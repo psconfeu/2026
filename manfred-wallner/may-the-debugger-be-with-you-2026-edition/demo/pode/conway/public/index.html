@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conway Game of Life</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <main class="layout">
+        <section class="panel">
+            <h1>Conway Game of Life</h1>
+            <p class="subhead">Browser UI, PowerShell simulation engine (Pode backend)</p>
+
+            <div class="controls">
+                <label>Width <input id="width" type="number" min="5" max="300" value="80"></label>
+                <label>Height <input id="height" type="number" min="5" max="200" value="40"></label>
+                <label>Density <input id="density" type="number" min="0" max="1" step="0.01" value="0.28"></label>
+                <label>Seed <input id="seed" type="number" value="42"></label>
+                <label>Update interval (ms) <input id="intervalMs" type="number" min="20" max="5000" step="10"
+                        value="80"></label>
+                <label class="wrap"><input id="wrap" type="checkbox"> Wrap edges</label>
+            </div>
+
+            <div class="actions">
+                <button id="reset">Reset</button>
+                <button id="step">Step</button>
+                <button id="run">Run</button>
+                <button id="stop" disabled>Stop</button>
+            </div>
+
+            <div class="meta">
+                <span id="generation">Gen: 0</span>
+                <span id="size">Size: 0x0</span>
+                <span id="status">Idle</span>
+            </div>
+        </section>
+
+        <section class="board-wrap">
+            <canvas id="board" width="960" height="540"></canvas>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+
+</html>

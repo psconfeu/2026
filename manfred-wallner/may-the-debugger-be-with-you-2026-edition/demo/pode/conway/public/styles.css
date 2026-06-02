@@ -1,0 +1,148 @@
+:root {
+    --bg0: #0e1418;
+    --bg1: #15222a;
+    --ink: #e4f0ea;
+    --muted: #97aba2;
+    --accent: #49e2a9;
+    --accent-2: #ffce63;
+    --grid: #21343f;
+    --dead: #162028;
+    --alive: #49e2a9;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--ink);
+    font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+    background: radial-gradient(circle at 20% 0%, #1f3f4d 0%, var(--bg0) 45%),
+                linear-gradient(160deg, var(--bg0), var(--bg1));
+}
+
+.layout {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    grid-template-columns: 340px 1fr;
+}
+
+.panel {
+    background: rgba(12, 19, 24, 0.75);
+    border: 1px solid #355263;
+    border-radius: 14px;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.35rem;
+}
+
+.subhead {
+    margin-top: 0.35rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+
+label {
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+}
+
+label.wrap {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+input[type="number"] {
+    width: 100%;
+    background: #0f181f;
+    color: var(--ink);
+    border: 1px solid #395768;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.actions {
+    display: flex;
+    gap: 0.55rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 0.52rem 0.85rem;
+    background: #274557;
+    color: var(--ink);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover:enabled {
+    background: #2f5a70;
+}
+
+button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+#run {
+    background: #17754f;
+}
+
+#step {
+    background: #7a5b17;
+}
+
+.meta {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.85rem;
+    color: var(--accent-2);
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-size: 0.86rem;
+    flex-wrap: wrap;
+}
+
+.board-wrap {
+    background: rgba(8, 14, 18, 0.85);
+    border: 1px solid #2e4655;
+    border-radius: 14px;
+    padding: 0.75rem;
+    min-height: 70vh;
+}
+
+#board {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: #0b1116;
+}
+
+@media (max-width: 980px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .board-wrap {
+        min-height: 58vh;
+    }
+}
