@@ -1,0 +1,33 @@
+# ============================================
+# DEMO 1 — ONLYIFNOTEXISTS
+# ============================================
+
+
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo-nofeatures -TemplateFile onlyIfNotExistsNoFeature.bicep -Name onlyIfNotExists-nofeatures
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo-nofeatures -TemplateFile onlyIfNotExistsNoFeature.bicep -Name onlyIfNotExists-nofeatures
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo -TemplateFile onlyIfNotExists.bicep -Name onlyIfNotExists
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo -TemplateFile onlyIfNotExists.bicep -Name onlyIfNotExists
+
+# ============================================
+# DEMO 2 — THISNAMESPACE
+# ============================================
+
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo-nofeatures -TemplateFile thisNamespaceNoFeature.bicep -Name thisNamespace-nofeatures
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo-nofeatures -TemplateFile thisNamespaceNoFeature.bicep -Name thisNamespace-nofeatures
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo -TemplateFile thisNamespace.bicep -Name thisNamespace
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo -TemplateFile thisNamespace.bicep -Name thisNamespace
+
+# ============================================
+# DEMO 3 — NULLIFNOTFOUND
+# ============================================
+
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo-nofeatures -TemplateFile nullIfNotFoundNoFeature.bicep -Name nullIfNotFound-nofeatures -TemplateParameterObject @{storageName = "storagedoesnotexist"}
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo -TemplateFile nullIfNotFound.bicep -Name nullIfNotFound -TemplateParameterObject @{storageName = "storagedoesnotexist"}
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo -TemplateFile nullIfNotFound.bicep -Name nullIfNotFound -TemplateParameterObject @{storageName = "featuredemostorage"}
+
+# ============================================
+# DEMO 4 — RETRYON
+# ============================================
+
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo-nofeatures -TemplateFile retryOnNoFeature.bicep -Name retryOn-nofeatures
+New-AzResourceGroupDeployment -ResourceGroupName tasmalligan-demo -TemplateFile retryOn.bicep -Name retryOn
