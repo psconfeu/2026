@@ -1,5 +1,23 @@
 # Beyond Scripts: Extending Azure SRE Agent with PowerShell Automation
 
+## Slides
+
+📄 [PSCONFEU26_JanEgilRing_BeyondScripts.pdf](./PSCONFEU26_JanEgilRing_BeyondScripts.pdf)
+
+## Sample Application & Demo Code
+
+All demo scenarios are driven against a sample Azure application maintained in a dedicated repository:
+
+- **Sample app & infrastructure:** [janegilring/sample-app-azure-sre](https://github.com/janegilring/sample-app-azure-sre) — Bicep infrastructure, sample web app, Azure Automation runbooks, drift detection, and the `Set-AppServicePlanSku` / `Check-InfrastructureDrift` PowerShell runbooks used by the custom SRE Agent sub-agents.
+
+## Resources
+
+- 📰 [Azure SRE Agent at Microsoft Build 2026: Bringing agentic operations to the enterprise](https://techcommunity.microsoft.com/blog/appsonazureblog/azure-sre-agent-at-microsoft-build-2026-bringing-agentic-operations-to-the-enter/4524669) — official announcement covering the platform's new GA features, custom agents, MCP extensibility, incident handling, and enterprise governance.
+- 📚 [Azure SRE Agent documentation](https://learn.microsoft.com/azure/sre-agent/) — overview, custom agents, memory, response plans, incident handlers.
+- 🧩 [Model Context Protocol (MCP) specification](https://modelcontextprotocol.io/) — the open protocol used by SRE Agent to discover and invoke external tools.
+- 🛠 [Azure Logic Apps Standard — MCP server pattern](https://learn.microsoft.com/azure/logic-apps/) — used in the demo to expose PowerShell-backed remediation tools (`ContosoSreRemediation_SetAppServicePlanSku`, `ContosoSreRemediation_EnrichIncident`) to SRE Agent.
+- 🔁 [Azure Automation runbooks](https://learn.microsoft.com/azure/automation/automation-runbook-types#powershell-runbooks) — PowerShell 7.x runbooks invoked from Logic Apps to perform the actual remediation (SKU scaling, drift remediation).
+
 ## Abstract
 
 Azure operations teams face a common challenge: repetitive incident response, alert triage, and infrastructure drift detection consume valuable time that could be spent on strategic initiatives. While PowerShell has long been the automation tool of choice for Azure administrators, the emergence of AI-powered agentic systems opens new possibilities for intelligent, autonomous operational workflows.
