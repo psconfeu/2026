@@ -162,7 +162,7 @@ OAuth2 Permission Scopes describe the delegated permissions available to interac
 Roles describe application roles available to non-interactive users, i.e. applications.
 
 So, where do we get started while looking for resources? Well, the authoritative source
-is always best: <https://learn.microsoft.com/en-us/graph/permissions-reference>. Merrill Fernando, the principal product manager for Entra,
+is always best: <https://learn.microsoft.com/en-us/graph/permissions-reference>. Merrill Fernando, the **former** principal product manager for Entra,
 also provides an excellent overview: <https://graphpermissions.merill.net/permission/>
 
 That being said, the [Graph X-Ray extension](https://graphxray.merill.net/) is an excellent
@@ -263,7 +263,7 @@ Too much UIs are bad for you, so let's get back to the CLI!
    ```
 1. With that done, we can update the application using the HTTP-method `PATCH` and the application's object id or application id:
    
-   `Invoke-EntraRequest -Method Patch -Path applications/$graph`
+   `Invoke-EntraRequest -Method Patch -Path applications/$($app.id) -Body $body -ContentType application/json`
 1. Either GET the app again or view the portal to verify that the app permissions have indeed been requested and not yet been consented to.
 1. Congratulations! You're well on your way to actually automate some things using the Graph API!
 
@@ -288,7 +288,7 @@ In our case, both permissions require admin consent.
 1. With this information, we can start building our request:
 
    ```powershell
-   $appServicePrincipal = Invoke-EntraRequest -Path "servicePrincipals(appid='cdc0925b-d7eb-49c8-bc92-980dc5da44b2')"
+   $appServicePrincipal = Invoke-EntraRequest -Path "servicePrincipals(appid='$($app.appId)')"
    $graphApp = '00000003-0000-0000-c000-000000000000'
    $graphServicePrincipal = Invoke-EntraRequest -Path "servicePrincipals(appId='$graphApp')"
    $role = $graphServicePrincipal.appRoles | Where value -eq Application.Read.All
@@ -315,6 +315,7 @@ In our case, both permissions require admin consent.
    $oauth2PermissionGrant = @{
       resourceId  = $graphServicePrincipal.id
       consentType = 'AllPrincipals'
+      #principalId = 'GUID of the USER'
       clientId    = $appServicePrincipal.id
       scope       = $delegate.value -join ' ' # Or trust the $OFS
    }
@@ -358,7 +359,7 @@ Client secrets are just that: A pre-shared secret with an expiration date! Let's
 
 1. We start with the [API docs](https://learn.microsoft.com/en-us/graph/api/application-addpassword?view=graph-rest-1.0&tabs=http) again. The Application resource supports adding all kinds of secrets!
    >NOTE: Take note of the request body parameters: They are all optional, meaning: This is the simplest credential to create!
-1. Time to create a password and store it in a variable: `$clientSecret = Invoke-EntraRequest -Path applications/$($app.id)/addPassword -ContentType application/json`
+1. Time to create a password and store it in a variable: `$clientSecret = Invoke-EntraRequest -Path applications/$($app.id)/addPassword -Method Post -ContentType application/json`
 1. `$clientSecret.secretText` now contains your client secret. Try logging in with it!
    <details>
    <summary>Show me</summary>
@@ -562,3 +563,41 @@ Commit, push, and witness our work come to fruition!
 Going forward from here, you can customize your app registration and create new ones to fit your automation needs. Using
 resource such as Azure Automation Runbooks you don't even need to handle federated credentials, as the platform does
 it all for you and you can simply sign-in.
+
+Workflow to automatically update secrets in a vault:
+
+- Attach the Vault Secret Resource Id to each app registration using the internal notes or service management reference
+- Give the App the permissions
+  - To also update password and certificate secrets
+  - The role "Key Vault Certificate Officer" or "Key Vault Secrets Officer" on the vault
+- In the sample workflow, read the vault secret resource ID and parse the required info
+- POST a new client secret/certificate (certs need to contain signed JWT token as proof!)
+  - If app contains only expired or near-expired secrets
+- Add a new secret version to Key Vault
+- Let the old secret expire naturally, and maybe remove expired secrets
+
+
+## Bonus: More examples to try
+
+
+```powershell
+# Compound Conditions
+Invoke-EntraRequest -Path "users?`$filter=accountEnabled eq false and department eq 'IT'"
+Invoke-EntraRequest -path "users?`$filter=(startswith(givenname,'John') AND department eq 'IT') OR (displayName eq 'Johns Elvis')&`$select=displayName,department"
+
+# Advanced Queries
+$theHeader = @{consistencylevel = 'eventual'}
+# Mixed query parameters
+Invoke-EntraRequest -Path 'users?$search="displayName:John"&$filter=department eq ''Customers''' -Header $theHeader
+
+# Some more $count-ing - for example Apps with too few owners
+# Normal approach does not work here
+Invoke-EntraRequest -Path 'applications?$filter=owners/$count le 2&$count=true&$select=id,displayName' -Header $theHeader
+# The attribute only supports comparisons with 0 and 1
+Invoke-EntraRequest -Path 'applications?$filter=owners/$count eq 0 or owners/$count eq 1&$count=true&$select=id,displayName' -Header $theHeader
+
+# A bit more arcane with lambda operators
+# Look closely at the docs: https://learn.microsoft.com/en-us/graph/aad-advanced-queries?tabs=http#application-properties
+# This advanced query requires $count AND the header
+Invoke-EntraRequest -path 'applications?$count=true&$filter=publicClient/redirectUris/any(p:startswith(p, ''http''))' -Header $theHeader -Service GraphBeta
+```
