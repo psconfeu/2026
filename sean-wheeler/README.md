@@ -4,7 +4,11 @@
 
 *Principal Content Developer - PowerShell*
 
-Since 2017, I have been the lead documentarian for PowerShell. I ensure that users have the content they need. I also support and encourage the PowerShell Community to add value via open-source contributions to the documentation. In my 25+ years at Microsoft, I have taught many workshops on scripting, debugging, and advanced troubleshooting. Using my scripting expertise, I created tools to help customers collect and analyze data used to support and optimize their environments.
+Since 2017, I have been the lead documentarian for PowerShell. I ensure that users have the content
+they need. I also support and encourage the PowerShell Community to add value via open-source
+contributions to the documentation. In my 25+ years at Microsoft, I have taught many workshops on
+scripting, debugging, and advanced troubleshooting. Using my scripting expertise, I created tools to
+help customers collect and analyze data used to support and optimize their environments.
 
 You can find my blog and presentations at https://seanonit.org/docs.
 
