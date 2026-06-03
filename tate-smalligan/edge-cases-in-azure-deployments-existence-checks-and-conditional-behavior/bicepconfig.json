@@ -1,0 +1,12 @@
+{
+    "experimentalFeaturesEnabled": {
+        "thisNamespace": true,
+        "existingNullIfNotFound": true,
+        "waitAndRetry": true,
+        "localDeploy": true
+    },
+    "experimentalFeaturesWarning": false,
+    "extensions": {
+        "dsc": "br:contosobicepdsc1.azurecr.io/extensions/dsc:latest"
+    }
+}
