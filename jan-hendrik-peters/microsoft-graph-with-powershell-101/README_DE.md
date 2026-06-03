@@ -155,7 +155,7 @@ Rollen beschreiben Applikations-Rollen die nicht-interaktiven Nutzern zu Verfüg
 Also, wo fängt man an, wenn man nach möglichen Rollen sucht? Tja, die Hersteller-Quelle ist in diesem Fall am Besten geeignet: <https://learn.microsoft.com/en-us/graph/permissions-reference>
 
 So, where do we get started while looking for resources? Well, the authoritative source
-is always best: <https://learn.microsoft.com/en-us/graph/permissions-reference>. Merrill Fernando, Principal Product Manager für Entra,
+is always best: <https://learn.microsoft.com/en-us/graph/permissions-reference>. Merrill Fernando, ehem. Principal Product Manager für Entra,
 stellt ebenfalls einen super Überblick bereit: <https://graphpermissions.merill.net/permission/>
 
 Auch ein guter Startpunkt, um von ClickOps wegzukommen, ist die Browser-Extension [Graph X-Ray](https://graphxray.merill.net/). Erinnert
@@ -255,7 +255,7 @@ Aber: Zu viel UI ist ungesund, also husch husch, zurück in die CLI.
    ```
 1. Wenn das erledigt ist, können wir mit einem `PATCH` und der AppId bzw. Object-ID die Applikation aktualisieren:
    
-   `Invoke-EntraRequest -Method Patch -Path applications/$($app.Id)`
+   `Invoke-EntraRequest -Method Patch -Body $body -ContentType application/json -Path applications/$($app.Id)`
 1. Schick' noch einen GET hinterher, um die zu verifizieren, dass die Rechte korrekt eingetragen wurden. Alternativ siehst du diese Info im Azure Portal.
 1. Glückwunsch! Wir nähern uns in riesigen Schritten dem Ziel, alles zu automatisieren.
 
