@@ -1,0 +1,18 @@
+Octave  0 - high B  - G
+Octave +3 - high F  - e
+Octave +4 - high G# - t
+
+Octave -1 - low A   - -
+
+Octave  0 - High G  - C
+Octave +3 - high G# - h
+Octave +3 - high A  - i
+Octave +3 - high C  - l
+Octave +3 - high E  - d
+
+Octave +1 - high C# - I
+Octave +4 - high G# - t
+Octave +3 - high F  - e
+Octave +4 - high C# - m
+
+Octave -4 - low A# - CR
