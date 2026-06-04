@@ -1,5 +1,7 @@
 # Building Open Source Modules in C#
 
+The slides can be found at [Emanuel's repository](https://github.com/PalmEmanuel/PSConfEU/tree/main/2026/OpenSourceModulesInCSharp) and the demo code at [PalmEmanuel/AzPigeon](https://github.com/PalmEmanuel/AzPigeon).
+
 ## Abstract
 
 Some of the best modules you're using have been written in C#. Why, and how?

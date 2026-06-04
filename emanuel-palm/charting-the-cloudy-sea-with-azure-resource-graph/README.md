@@ -1,5 +1,7 @@
 # Charting the Cloudy Sea with Azure Resource Graph
 
+The slides and demo code can be found at [Emanuel's repository](https://github.com/PalmEmanuel/PSConfEU/tree/main/2026/AzureResourceGraph).
+
 ## Abstract
 
 In Azure, understanding the full landscape of your resources is key to making informed decisions.
