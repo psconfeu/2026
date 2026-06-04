@@ -2,7 +2,7 @@
 param keyVaultName string
 
 @description('Object ID to assign access policy to (e.g., a user, service principal, or managed identity)')
-param objectId string = '8db52346-5bb1-4e38-b85a-d36d79a70360'
+param objectId string
 
 @description('Permissions to assign to the object ID')
 param permissions object = {
