@@ -1,0 +1,13 @@
+$schema: https://aka.ms/dsc/schemas/v3/bundled/config/document.json
+directives:
+  securityContext: elevated
+resources:
+- name: AddSubsystems
+  type: Microsoft.OpenSSH.SSHD/SubsystemList
+  metadata:
+    filepath: C:\psconfeu\dsc\sshd_config_actual
+  properties:
+    _purge: false
+    subsystem:
+    - name: powershell
+      value: C:/progra~1/powershell/7/pwsh.exe -sshs

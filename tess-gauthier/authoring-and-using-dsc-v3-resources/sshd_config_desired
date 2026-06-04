@@ -1,0 +1,11 @@
+SyslogFacility LOCAL0
+LogLevel DEBUG3
+
+Port 1234 
+
+PubkeyAuthentication no
+PasswordAuthentication no
+ChallengeResponseAuthentication yes
+
+Ciphers aes256-ctr,aes192-ctr,aes128-ctr
+Macs hmac-sha2-512,hmac-sha2-256

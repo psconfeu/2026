@@ -1,0 +1,13 @@
+$schema: https://aka.ms/dsc/schemas/v3/bundled/config/document.json
+directives:
+  securityContext: elevated
+resources:
+- name: ModifySubsystem
+  type: Microsoft.OpenSSH.SSHD/Subsystem
+  metadata:
+    filepath: C:\psconfeu\dsc\sshd_config_actual
+  properties:
+    _exist: false
+    subsystem:
+      name: powershell
+

@@ -1,0 +1,13 @@
+# use the Microsoft.OpenSSH.SSHD/sshd_config resource to audit all settings via export or get (includes _inheritedDefaults)
+$schema: https://aka.ms/dsc/schemas/v3/bundled/config/document.json
+directives:
+  securityContext: elevated
+resources:
+- name: sshdconfig
+  type: Microsoft.OpenSSH.SSHD/sshd_config
+  metadata:
+    filepath: C:\psconfeu\dsc\sshd_config_desired
+  properties:
+    ciphers: null
+    kexalgorithms: null
+    macs: null

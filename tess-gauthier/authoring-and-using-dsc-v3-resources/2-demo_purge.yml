@@ -1,0 +1,16 @@
+# use the Microsoft.OpenSSH.SSHD/sshd_config resource to audit all settings via export or get (includes _inheritedDefaults)
+$schema: https://aka.ms/dsc/schemas/v3/bundled/config/document.json
+directives:
+  securityContext: elevated
+resources:
+- name: sshdconfig
+  type: Microsoft.OpenSSH.SSHD/sshd_config
+  metadata:
+    filepath: C:\psconfeu\dsc\sshd_config_actual
+  properties:
+    _purge: true
+    ciphers: aes256-ctr,aes192-ctr,aes128-ctr
+    macs: hmac-sha2-512,hmac-sha2-256
+    subsystem:
+      name: sftp
+      value: sftp-server.exe
