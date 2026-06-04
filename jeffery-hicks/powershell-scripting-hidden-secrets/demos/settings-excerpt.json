@@ -1,0 +1,46 @@
+{
+    "actions": [
+        {
+            "command": {
+                "action": "sendInput",
+                "input": "Get-Date -format g | Set-Clipboard\r"
+            },
+            "id": "User.sendInput.D9336D35",
+            "name": "Copy date"
+        },
+        {
+            "command": {
+                "action": "sendInput",
+                "input": "(New-TimeSpan -Start (Get-CimInstance win32_operatingSystem -Property LastBootUpTime).LastBootUpTime -End (Get-Date)).toString()"
+            },
+            "id": "User.sendInput.9E63F9F2",
+            "name": "uptime"
+        },
+        {
+            "command": {
+                "action": "sendInput",
+                "input": "Get-PSReadLineKeyHandler | where group -EQ custom | Select-Object Key,Function,@{Name='Description';Expression = {$_.Description.replace('[','[[').replace(']',']]')  }} | Format-SpectreTable -AllowMarkup -Title 'My custom key handlers' -color Chartreuse1 |Out-SpectreHost\r"
+            },
+            "id": "User.sendInput.6662EF2A",
+            "name": "myPSReadlineHandlers"
+        }
+    ],
+    "keybindings": [
+        {
+            "id": "User.splitPane.5B23D113",
+            "keys": "ctrl+shift+comma"
+        },
+        {
+            "id": "User.sendInput.58CEF08D",
+            "keys": "ctrl+alt+w"
+        },
+        {
+            "id": "User.sendInput.9E63F9F2",
+            "keys": "ctrl+alt+u"
+        },
+        {
+            "id": "User.sendInput.6662EF2A",
+            "keys": "ctrl+alt+k"
+        },
+    ]
+}
