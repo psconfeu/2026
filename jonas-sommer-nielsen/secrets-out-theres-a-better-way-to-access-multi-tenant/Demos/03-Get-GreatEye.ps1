@@ -17,19 +17,19 @@
 .NOTES
     Runbook  : Get-GreatEye
     Account  : TheDarkTower (Mordor - Middle Earth)
-    App Reg  : The One Ring  (2b3026ae-47d4-4e47-b04a-a0b0f8454ce2)
-    FIC sub  : d0630ebd-b8f5-4a22-bb5e-c16507122088  (MI Object ID)
+    App Reg  : The One Ring  (<your-app-client-id>)
+    FIC sub  : <your-mi-object-id>  (MI Object ID)
 #>
 
 param (
     [Parameter(Mandatory = $false)]
-    [string] $OneRingClientId = '2b3026ae-47d4-4e47-b04a-a0b0f8454ce2'
+    [string] $OneRingClientId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'   # The One Ring app registration
 )
 
 $RemoteTenants = [ordered]@{
-    'The Shire' = 'eafc0396-924f-4254-9a0d-26a46c372ded'
-    'Rohan'     = '5af80872-b2e7-4cc4-807a-498754230280'
-    'Gondor'    = '3e1e38ee-0408-49f7-b037-2a23073678bf'
+    'The Shire' = '11111111-1111-1111-1111-111111111111'
+    'Rohan'     = '22222222-2222-2222-2222-222222222222'
+    'Gondor'    = '33333333-3333-3333-3333-333333333333'
 }
 
 # ── 1. Single MI assertion — reused for every tenant ──────────────────────

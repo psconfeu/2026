@@ -1,54 +1,74 @@
 <#
 .SYNOPSIS
-    Demo 1 — The simplest possible secret-free cross-tenant call.
+    Demo 2 — Invoke-Palantir across all of Middle-Earth.
 
 .DESCRIPTION
-    Runs inside TheDarkTower Automation Account (Mordor).
-    Uses the system-assigned Managed Identity, federated to "The One Ring"
-    app registration, to read users from The Shire — no secrets, no certs.
-
-    Three HTTP calls. That's it.
+    Same pattern as Demo 1, now looping over Shire, Rohan, Gondor.
+    Highlights that adding a tenant = adding a row to a hashtable.
+    Still no secrets, no certificates.
 
 .NOTES
-    Runbook  : Invoke-Palantir-Shire
+    Runbook  : Invoke-Palantir
     Account  : TheDarkTower (Mordor - Middle Earth)
-    App Reg  : The One Ring  (2b3026ae-47d4-4e47-b04a-a0b0f8454ce2)
-    FIC sub  : d0630ebd-b8f5-4a22-bb5e-c16507122088  (MI Object ID)
+    App Reg  : The One App  (<your-app-client-id>)
+    FIC sub  : <your-mi-object-id>  (MI Object ID)
 #>
 
-$OneAppClientId = '2b3026ae-47d4-4e47-b04a-a0b0f8454ce2'
-$ShireTenantId   = 'eafc0396-924f-4254-9a0d-26a46c372ded'
+param (
+    [Parameter(Mandatory = $false)]
+    [string] $OneAppClientId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'   # The One Ring app registration
+)
 
-# ── 1. Ask Mordor's Identity endpoint for an assertion token ────────────────
-#      Audience MUST be api://AzureADTokenExchange (not Graph, not ARM).
-$miResponse = Invoke-RestMethod `
+$RemoteTenants = [ordered]@{
+    'The Shire' = '11111111-1111-1111-1111-111111111111'
+    'Rohan'     = '22222222-2222-2222-2222-222222222222'
+    'Gondor'    = '33333333-3333-3333-3333-333333333333'
+}
+
+# ── 1. Single MI assertion — reused for every tenant ──────────────────────
+$miAssertion = (Invoke-RestMethod `
     -Uri     $env:IDENTITY_ENDPOINT `
     -Method  POST `
     -Headers @{ 'X-IDENTITY-HEADER' = $env:IDENTITY_HEADER } `
     -ContentType 'application/x-www-form-urlencoded' `
-    -Body    @{ resource = 'api://AzureADTokenExchange' }
+    -Body    @{ resource = 'api://AzureADTokenExchange' }).access_token
 
-$miAssertion = $miResponse.access_token
+Write-Output "🔮 The Palantír awakens. Gazing into Middle-Earth..."
+Write-Output ""
 
-# ── 2. Exchange that assertion for a Graph token in The Shire ──────────────
-$tokenResponse = Invoke-RestMethod `
-    -Uri    "https://login.microsoftonline.com/$ShireTenantId/oauth2/v2.0/token" `
-    -Method POST `
-    -ContentType 'application/x-www-form-urlencoded' `
-    -Body @{
-        grant_type            = 'client_credentials'
-        client_id             = $OneAppClientId
-        scope                 = 'https://graph.microsoft.com/.default'
-        client_assertion_type = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
-        client_assertion      = $miAssertion
+foreach ($tenantName in $RemoteTenants.Keys) {
+    $tenantId = $RemoteTenants[$tenantName]
+
+    # ── 2. Exchange for a Graph token in this tenant ──────────────────────
+    #      Fails with AADSTS700016 if The One App isn't consented here yet.
+    try {
+        $graphToken = (Invoke-RestMethod `
+            -Uri    "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token" `
+            -Method POST `
+            -ContentType 'application/x-www-form-urlencoded' `
+            -Body @{
+                grant_type            = 'client_credentials'
+                client_id             = $OneAppClientId
+                scope                 = 'https://graph.microsoft.com/.default'
+                client_assertion_type = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
+                client_assertion      = $miAssertion
+            }).access_token
+    }
+    catch {
+        Write-Output "── $tenantName ──────────────────────────────────────"
+        Write-Output "   ⛔ The App has no power here — admin consent not granted."
+        Write-Output ""
+        continue
     }
 
-$shireGraphToken = $tokenResponse.access_token
+    # ── 3. Call Graph as "The One App" inside the remote tenant ──────────
+    $users = (Invoke-RestMethod `
+        -Uri     'https://graph.microsoft.com/v1.0/users?$select=displayName,userPrincipalName' `
+        -Headers @{ Authorization = "Bearer $graphToken" }).value
 
-# ── 3. Call Graph in The Shire as "The One App" ───────────────────────────
-$users = Invoke-RestMethod `
-    -Uri     'https://graph.microsoft.com/v1.0/users?$select=displayName,userPrincipalName' `
-    -Headers @{ Authorization = "Bearer $shireGraphToken" }
+    Write-Output "── $tenantName ($($users.Count) souls) ─────────────────────────"
+    $users | ForEach-Object { Write-Output "   • $($_.displayName)  <$($_.userPrincipalName)>" }
+    Write-Output ""
+}
 
-"🔮 Palantír reveals the people of The Shire:"
-$users.value | ForEach-Object { "   • $($_.displayName)  <$($_.userPrincipalName)>" }
+Write-Output "🔮 One App, three realms, zero secrets."

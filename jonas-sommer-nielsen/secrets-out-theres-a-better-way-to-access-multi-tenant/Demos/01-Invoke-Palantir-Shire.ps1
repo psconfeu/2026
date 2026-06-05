@@ -12,12 +12,12 @@
 .NOTES
     Runbook  : Invoke-Palantir-Shire
     Account  : TheDarkTower (Mordor - Middle Earth)
-    App Reg  : The One Ring  (2b3026ae-47d4-4e47-b04a-a0b0f8454ce2)
-    FIC sub  : d0630ebd-b8f5-4a22-bb5e-c16507122088  (MI Object ID)
+    App Reg  : The One Ring  (<your-app-client-id>)
+    FIC sub  : <your-mi-object-id>  (MI Object ID)
 #>
 
-$OneAppClientId = '2b3026ae-47d4-4e47-b04a-a0b0f8454ce2'
-$ShireTenantId   = 'eafc0396-924f-4254-9a0d-26a46c372ded'
+$OneAppClientId = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'   # The One Ring app registration
+$ShireTenantId  = '11111111-1111-1111-1111-111111111111'   # The Shire tenant
 
 # ── 1. Ask Mordor's Identity endpoint for an assertion token ────────────────
 #      Audience MUST be api://AzureADTokenExchange (not Graph, not ARM).
