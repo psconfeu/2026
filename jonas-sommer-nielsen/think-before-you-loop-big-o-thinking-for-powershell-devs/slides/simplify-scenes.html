@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Big O — The Simplification Rules</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #ffffff;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px;
+  }
+  h1 { font-size: 1.9rem; margin-bottom: 6px; color: #111; }
+  .subtitle { color: #666; font-style: italic; margin-bottom: 18px; font-size: 1.05rem; }
+
+  .scene-indicator { display: flex; gap: 8px; margin-bottom: 14px; }
+  .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #ddd;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .dot.active { background: #1976d2; transform: scale(1.3); }
+  .dot.done { background: #a5d6a5; }
+
+  .scene-title {
+    font-size: 1.25rem;
+    color: #1976d2;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  /* Formula: full expression is always visible. On reveal, a red line is drawn
+     across the "drop" parts and the simplified Big O fades in. */
+  .scene-rule {
+    font-family: 'Cascadia Code', Consolas, monospace;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 2.2rem;
+  }
+  .drop {
+    position: relative;
+    color: #333;
+    transition: color 0.6s;
+  }
+  .drop::after {
+    content: '';
+    position: absolute;
+    left: -2px; right: -2px;
+    top: 50%;
+    height: 3px;
+    background: #c62828;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.55s ease-out;
+  }
+  .revealed .drop { color: #b71c1c; }
+  .revealed .drop::after { transform: scaleX(1); }
+  .scene-rule .arrow { color: #bbb; }
+  .scene-rule .bigo {
+    color: #2e7d32;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.5s 0.4s, transform 0.5s 0.4s;
+  }
+  .revealed .scene-rule .bigo { opacity: 1; transform: translateX(0); }
+
+  .body-area {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+  }
+  .chart-card {
+    width: 560px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 14px;
+    flex-shrink: 0;
+  }
+  .chart-card canvas { height: 320px !important; }
+
+  /* Log-scale slider */
+  .slider-row {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Cascadia Code', Consolas, monospace;
+    font-size: 0.9rem;
+  }
+  .slider-row label { color: #555; }
+  .slider-row .nval { color: #1976d2; font-weight: 700; font-size: 1.05rem; min-width: 90px; }
+  .slider-row input[type=range] { flex: 1; }
+  .tick-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Cascadia Code', Consolas, monospace;
+    font-size: 0.72rem;
+    color: #888;
+    padding: 0 4px;
+    margin-top: 2px;
+  }
+
+  .right-col {
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Values table */
+  table.values {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: 'Cascadia Code', Consolas, monospace;
+    font-size: 0.88rem;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  table.values th, table.values td {
+    padding: 6px 10px;
+    text-align: right;
+    border-bottom: 1px solid #eee;
+  }
+  table.values th {
+    background: #f0f0f0;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  table.values th:first-child, table.values td:first-child {
+    text-align: left;
+    color: #888;
+  }
+  table.values td.fcol { color: #1976d2; font-weight: 600; }
+  table.values td.gcol { color: #2e7d32; font-weight: 600; }
+  table.values td.rcol { color: #555; }
+  table.values tr.highlight td { background: #fff9c4; }
+  table.values tr.highlight td:first-child { color: #333; font-weight: 700; }
+  table.values td.hidden-cell { color: #ccc; font-weight: 400; }
+
+  .snippet {
+    background: #1a1a2e;
+    color: #e8e8f0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-family: 'Cascadia Code', Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .narrative {
+    background: #fff8e1;
+    border: 1px solid #ffd54f;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #5d4037;
+  }
+  .narrative strong { color: #e65100; }
+
+  .controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .controls button {
+    padding: 9px 20px;
+    border: 2px solid #1976d2;
+    border-radius: 8px;
+    background: #fff;
+    color: #1976d2;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .controls button:hover { background: #1976d2; color: #fff; }
+  .controls button:disabled { opacity: 0.4; cursor: not-allowed; background: #fff; color: #1976d2; }
+  .controls button.secondary { border-color: #999; color: #666; }
+  .controls button.secondary:hover { background: #666; color: #fff; }
+
+  .summary {
+    margin-top: 24px;
+    max-width: 1000px;
+    background: #e8f5e9;
+    border: 1px solid #a5d6a5;
+    border-radius: 10px;
+    padding: 18px 24px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #1b5e20;
+    display: none;
+  }
+  .summary.shown { display: block; }
+  .summary h3 { margin-bottom: 8px; color: #1b5e20; }
+  .summary ul { padding-left: 22px; }
+  .summary code {
+    font-family: 'Cascadia Code', Consolas, monospace;
+    background: #c8e6c9;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1>The simplification rules of Big O</h1>
+<p class="subtitle">"Three rules. Then math gets out of the way."</p>
+
+<div class="scene-indicator" id="dots"></div>
+
+<div class="scene-title" id="sceneTitle"></div>
+
+<div id="sceneRuleWrap">
+  <div class="scene-rule" id="sceneRule"></div>
+</div>
+
+<div class="body-area">
+  <div class="chart-card">
+    <canvas id="chart"></canvas>
+    <div class="slider-row">
+      <label>n_max:</label>
+      <span class="nval" id="nMaxLabel">100</span>
+      <input type="range" id="nSlider" min="0" max="4" step="1" value="1">
+    </div>
+    <div class="tick-row">
+      <span>10</span><span>100</span><span>1k</span><span>10k</span><span>100k</span>
+    </div>
+  </div>
+  <div class="right-col">
+    <table class="values" id="valuesTable">
+      <thead>
+        <tr>
+          <th>n</th>
+          <th>Exact</th>
+          <th>Big O</th>
+          <th>Difference</th>
+        </tr>
+      </thead>
+      <tbody id="valuesBody"></tbody>
+    </table>
+    <div class="snippet" id="snippet"></div>
+    <div class="narrative" id="narrative"></div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="secondary" onclick="prev()" id="prevBtn">&larr; Previous</button>
+  <button onclick="reveal()" id="revealBtn">Reveal Big O</button>
+  <button onclick="next()" id="nextBtn">Next rule &rarr;</button>
+</div>
+
+<div class="summary" id="summary">
+  <h3>The three (and a half) rules</h3>
+  <ul>
+    <li><strong>Drop constant coefficients</strong> &mdash; <code>3n</code> is still <code>O(n)</code>. Same shape, different slope.</li>
+    <li><strong>Drop additive constants</strong> &mdash; <code>n + 100</code> is <code>O(n)</code>. Startup cost doesn't grow with the input.</li>
+    <li><strong>Drop lower-order terms</strong> &mdash; <code>n&sup2; + n</code> is <code>O(n&sup2;)</code>. The fastest-growing term eventually buries everything else.</li>
+    <li><strong>Bonus:</strong> when one input is bounded, <code>O(m + n)</code> collapses to <code>O(n)</code>. Only keep both if both can grow.</li>
+  </ul>
+  <p style="margin-top:10px"><strong>Why this works:</strong> Big O describes <em>shape at scale</em>.
+  Slide the n slider above and watch the table &mdash; the ratio f(n)/g(n) approaches a constant in every case.
+  Two algorithms with the same Big O scale the same way, even if one is 10x slower in absolute terms.</p>
+</div>
+
+<script>
+// Each scene defines:
+//   exactParts: array of { text, drop? }  — rendered with strike animation on `drop`
+//   bigO: simplified label
+//   f, g: numeric functions
+const scenes = [
+  {
+    title: 'Rule 1 — Drop constant coefficients',
+    exactParts: [
+      { text: 'f(n) = ' },
+      { text: '3', drop: true },
+      { text: 'n' },
+    ],
+    bigO: 'O(n)',
+    f: n => 3 * n,
+    g: n => n,
+    snip:
+`# Three passes over the same list
+$users | ForEach { Send-Welcome $_ }   # n
+$users | ForEach { Send-Setup   $_ }   # n
+$users | ForEach { Send-Survey  $_ }   # n
+# Total: 3n  -> still O(n)`,
+    narrative:
+      'Doing the work three times still scales <strong>linearly</strong>. ' +
+      'Both curves are straight lines &mdash; just different slopes. ' +
+      'Big O cares about the <em>shape</em>, not how steep it is.',
+  },
+  {
+    title: 'Rule 2 — Drop additive constants',
+    exactParts: [
+      { text: 'f(n) = n ' },
+      { text: '+ 100', drop: true },
+    ],
+    bigO: 'O(n)',
+    f: n => n + 100,
+    g: n => n,
+    snip:
+`# Fixed setup, then per-user work
+$config = Initialize-BigConfig    # ~100 ops
+$users  | ForEach { Process $_ }  # n ops`,
+    narrative:
+      'Startup cost is real &mdash; but it does not <strong>grow</strong>. ' +
+      'At <code>n = 10</code>, <code>+100</code> dominates (ratio 11&times;!). ' +
+      'At <code>n = 100,000</code>, it is a rounding error. ' +
+      'Move the slider &mdash; watch the ratio collapse toward 1.',
+  },
+  {
+    title: 'Rule 3 — Drop lower-order terms',
+    exactParts: [
+      { text: 'f(n) = n\u00B2 ' },
+      { text: '+ n', drop: true },
+    ],
+    bigO: 'O(n\u00B2)',
+    f: n => n * n + n,
+    g: n => n * n,
+    snip:
+`foreach ($a in $list) {
+    foreach ($b in $list) {       # n^2
+        Compare $a $b
+    }
+}
+$list | ForEach { Touch $_ }       # + n
+# n^2 + n  ->  O(n^2)`,
+    narrative:
+      'When two terms are added, the bigger one <strong>swallows</strong> the smaller. ' +
+      'At <code>n = 10</code>, the <code>+n</code> adds 10% on top. ' +
+      'At <code>n = 100,000</code>, it adds <strong>0.001%</strong>. ' +
+      'Slide the n&nbsp;slider right &mdash; watch the two lines merge.',
+  },
+  {
+    title: 'Bonus — O(m + n) when one input is bounded',
+    exactParts: [
+      { text: 'f(n) = ' },
+      { text: 'm + ', drop: true },
+      { text: 'n  ' },
+      { text: '(m = 50, fixed)', muted: true },
+    ],
+    bigO: 'O(n)',
+    f: n => 50 + n,
+    g: n => n,
+    snip:
+`# m = tenants (bounded), n = users (grows)
+$tenants | ForEach { Get-Token $_ }   # m ops
+$users   | ForEach { Process  $_ }    # n ops`,
+    narrative:
+      'If <code>m</code> can grow independently of <code>n</code>, keep both: <strong>O(m + n)</strong>. ' +
+      'But if <code>m</code> is bounded (e.g. a fixed set of tenants), it behaves like a constant ' +
+      '&mdash; and collapses into <strong>O(n)</strong>.',
+  },
+];
+
+// Log-scale slider: index 0..4 -> n_max 10, 100, 1000, 10000, 100000
+const N_SCALES = [10, 100, 1000, 10000, 100000];
+let nMaxIdx = 1;   // start at 100
+let idx = 0;
+let revealed = false;
+
+const ctx = document.getElementById('chart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [
+      { label: 'exact f(n)', data: [], borderColor: '#1976d2', backgroundColor: '#1976d220',
+        borderWidth: 3, pointRadius: 0, tension: 0.2 },
+      { label: 'Big O g(n)', data: [], borderColor: '#2e7d32', backgroundColor: 'transparent',
+        borderWidth: 2, borderDash: [6, 5], pointRadius: 0, tension: 0.2, hidden: true },
+    ],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 350 },
+    scales: {
+      x: { title: { display: true, text: 'n', color: '#555', font: { weight: 'bold' } },
+           ticks: { display: false }, grid: { display: false } },
+      y: { title: { display: true, text: 'steps', color: '#555', font: { weight: 'bold' } },
+           ticks: { display: false }, grid: { display: false }, min: 0 },
+    },
+    plugins: { legend: { position: 'top', labels: { boxWidth: 20, font: { size: 11 } } } },
+  },
+});
+
+const dotsEl = document.getElementById('dots');
+scenes.forEach(() => {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  dotsEl.appendChild(d);
+});
+
+function fmt(x) {
+  if (x === 0) return '0';
+  if (Math.abs(x) >= 1e9) return (x / 1e9).toFixed(2) + 'B';
+  if (Math.abs(x) >= 1e6) return (x / 1e6).toFixed(2) + 'M';
+  if (Math.abs(x) >= 1e4) return Math.round(x).toLocaleString();
+  if (Math.abs(x) >= 1)   return Math.round(x).toLocaleString();
+  return x.toPrecision(2);
+}
+
+function renderFormula() {
+  const s = scenes[idx];
+  const wrap = document.getElementById('sceneRule');
+  // Remove the "revealed" class from the outer container so animation can replay
+  document.getElementById('sceneRuleWrap').classList.remove('revealed');
+  wrap.innerHTML = '';
+
+  const exactSpan = document.createElement('span');
+  s.exactParts.forEach(p => {
+    const el = document.createElement('span');
+    el.textContent = p.text;
+    if (p.drop)  el.classList.add('drop');
+    if (p.muted) el.style.cssText = 'color:#888;font-size:0.95rem;margin-left:6px';
+    exactSpan.appendChild(el);
+  });
+  wrap.appendChild(exactSpan);
+
+  const arrow = document.createElement('span');
+  arrow.className = 'arrow';
+  arrow.innerHTML = '&rArr;';
+  wrap.appendChild(arrow);
+
+  const big = document.createElement('span');
+  big.className = 'bigo';
+  big.textContent = s.bigO;
+  wrap.appendChild(big);
+}
+
+function renderChart() {
+  const s = scenes[idx];
+  const nMax = N_SCALES[nMaxIdx];
+  const samples = 80;
+  const step = Math.max(1, Math.floor(nMax / samples));
+  const labels = [];
+  const fData = [];
+  const gData = [];
+  for (let n = 1; n <= nMax; n += step) {
+    labels.push(n);
+    fData.push(s.f(n));
+    gData.push(s.g(n));
+  }
+  chart.data.labels = labels;
+  chart.data.datasets[0].data = fData;
+  chart.data.datasets[1].data = gData;
+  chart.data.datasets[1].hidden = !revealed;
+  const peak = Math.max(...fData, ...(revealed ? gData : [0]));
+  chart.options.scales.y.max = peak * 1.08;
+  chart.update();
+}
+
+function renderTable() {
+  const s = scenes[idx];
+  const body = document.getElementById('valuesBody');
+  body.innerHTML = '';
+  N_SCALES.forEach((n, i) => {
+    const f = s.f(n), g = s.g(n);
+    const ratio = g === 0 ? '\u2014' : (f / g).toFixed(2) + '\u00D7';
+    const tr = document.createElement('tr');
+    if (i === nMaxIdx) tr.classList.add('highlight');
+    const gCell    = revealed ? `<td class="gcol">${fmt(g)}</td>`    : `<td class="gcol hidden-cell">\u2014</td>`;
+    const diffCell = revealed ? `<td class="rcol">${ratio}</td>`     : `<td class="rcol hidden-cell">\u2014</td>`;
+    tr.innerHTML = `<td>${n.toLocaleString()}</td>` +
+                   `<td class="fcol">${fmt(f)}</td>` +
+                   gCell +
+                   diffCell;
+    body.appendChild(tr);
+  });
+}
+
+function render() {
+  const s = scenes[idx];
+  document.getElementById('sceneTitle').textContent = s.title;
+  renderFormula();
+  document.getElementById('snippet').textContent = s.snip;
+  document.getElementById('narrative').innerHTML = s.narrative;
+
+  // Reset slider to n_max = 10 on every scene change
+  nMaxIdx = 0;
+  document.getElementById('nSlider').value = nMaxIdx;
+  document.getElementById('nMaxLabel').textContent = N_SCALES[nMaxIdx].toLocaleString();
+
+  revealed = false;
+  document.getElementById('revealBtn').disabled = false;
+  document.getElementById('revealBtn').textContent = 'Reveal Big O';
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx >= scenes.length - 1;
+
+  [...dotsEl.children].forEach((d, i) => {
+    d.classList.toggle('active', i === idx);
+    d.classList.toggle('done', i < idx);
+  });
+
+  document.getElementById('summary').classList.remove('shown');
+
+  renderChart();
+  renderTable();
+}
+
+function reveal() {
+  if (revealed) return;
+  revealed = true;
+  document.getElementById('sceneRuleWrap').classList.add('revealed');
+  chart.data.datasets[1].hidden = false;
+  chart.update();
+  renderTable();
+  document.getElementById('revealBtn').disabled = true;
+  if (idx === scenes.length - 1) {
+    document.getElementById('summary').classList.add('shown');
+  }
+}
+
+function next() { if (idx < scenes.length - 1) { idx++; render(); } }
+function prev() { if (idx > 0) { idx--; render(); } }
+
+document.getElementById('nSlider').addEventListener('input', e => {
+  nMaxIdx = parseInt(e.target.value, 10);
+  document.getElementById('nMaxLabel').textContent = N_SCALES[nMaxIdx].toLocaleString();
+  renderChart();
+  renderTable();
+});
+document.getElementById('nMaxLabel').textContent = N_SCALES[nMaxIdx].toLocaleString();
+
+render();
+</script>
+</body>
+</html>

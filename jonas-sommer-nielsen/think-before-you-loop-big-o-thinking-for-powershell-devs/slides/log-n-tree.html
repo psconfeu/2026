@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>O(log n) — Binary Search Tree</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #ffffff;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+  }
+  h1 { font-size: 2rem; margin-bottom: 8px; color: #111; }
+  .subtitle { color: #666; font-style: italic; margin-bottom: 24px; font-size: 1.1rem; }
+
+  .stats {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 16px;
+    font-size: 1.05rem;
+  }
+  .stat {
+    background: #f4f4f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 18px;
+    min-width: 130px;
+    text-align: center;
+  }
+  .stat .label { color: #777; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat .value { font-weight: 700; font-size: 1.4rem; color: #111; font-family: 'Cascadia Code', Consolas, monospace; }
+  .stat.depth .value { color: #2e7d32; }
+  .stat.nodes .value { color: #1976d2; }
+
+  .tree-wrap {
+    width: 1000px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  svg { display: block; width: 100%; height: auto; }
+
+  .node circle {
+    fill: #fff;
+    stroke: #999;
+    stroke-width: 2;
+    transition: fill 0.4s, stroke 0.4s, r 0.3s;
+  }
+  .node text {
+    font-family: 'Cascadia Code', Consolas, monospace;
+    font-size: 13px;
+    fill: #333;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: fill 0.4s;
+  }
+  .node.path circle { fill: #ffe082; stroke: #f9a825; }
+  .node.target circle { fill: #4ec94e; stroke: #2e7d32; stroke-width: 3; }
+  .node.target text { fill: #fff; font-weight: 700; }
+  .edge {
+    stroke: #bbb;
+    stroke-width: 2;
+    fill: none;
+    transition: stroke 0.4s, stroke-width 0.4s;
+  }
+  .edge.path {
+    stroke: #f9a825;
+    stroke-width: 4;
+  }
+
+  .controls {
+    margin-top: 22px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  button {
+    padding: 10px 20px;
+    border: 2px solid #555;
+    border-radius: 8px;
+    background: #fff;
+    color: #222;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  button:hover { background: #222; color: #fff; }
+  button.primary { border-color: #1976d2; color: #1976d2; }
+  button.primary:hover { background: #1976d2; color: #fff; }
+  button.search { border-color: #f9a825; color: #f9a825; }
+  button.search:hover { background: #f9a825; color: #fff; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; background: #fff; color: #999; border-color: #ccc; }
+
+  .takeaway {
+    margin-top: 28px;
+    max-width: 900px;
+    text-align: center;
+    font-size: 1.05rem;
+    color: #333;
+    background: #e8f5e9;
+    border: 1px solid #a5d6a5;
+    border-radius: 10px;
+    padding: 14px 22px;
+    line-height: 1.55;
+  }
+  .takeaway strong { color: #2e7d32; }
+</style>
+</head>
+<body>
+
+<h1>Binary Search Tree &mdash; O(log n)</h1>
+<p class="subtitle">"Double the data, take just one more step."</p>
+
+<div class="stats">
+  <div class="stat nodes">
+    <div class="label">Nodes (n)</div>
+    <div class="value" id="nodeCount">1</div>
+  </div>
+  <div class="stat depth">
+    <div class="label">Depth (steps to find any item)</div>
+    <div class="value" id="depthValue">1</div>
+  </div>
+  <div class="stat">
+    <div class="label">log&#8322;(n) + 1</div>
+    <div class="value" id="logValue">1</div>
+  </div>
+</div>
+
+<div class="tree-wrap">
+  <svg id="tree" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid meet"></svg>
+</div>
+
+<div class="controls">
+  <button class="primary" id="growBtn" onclick="grow()">Double the tree &rarr;</button>
+  <button class="search" id="searchBtn" onclick="searchRandom()">Search for a value</button>
+  <button onclick="reset()">Reset</button>
+</div>
+
+<div class="takeaway">
+  Each level doubles the number of nodes &mdash; but the depth only grows by <strong>one</strong>.<br>
+  A tree with <strong>1,000,000</strong> items is only <strong>~20 steps</strong> deep.
+  That is what <strong>O(log n)</strong> looks like &mdash; the opposite of exponential.
+</div>
+
+<script>
+const svg = document.getElementById('tree');
+const W = 1000;
+const H = 480;
+const LEVEL_HEIGHT = 70;
+const TOP_MARGIN = 40;
+
+let depth = 1; // start with one level (just the root)
+const MAX_DEPTH = 6; // 63 nodes
+
+// Build a sorted array, then arrange into a balanced BST level by level.
+function buildTree(d) {
+  const totalNodes = (1 << d) - 1; // 2^d - 1
+  // values 1..totalNodes — display them in BST order (in-order = sorted)
+  // Easiest: at level L (0-indexed), node index i within level gets value
+  //   = ((2*i + 1) * (2^(d-1-L)))   ... no, simpler: do an in-order walk.
+  const values = [];
+  for (let v = 1; v <= totalNodes; v++) values.push(v);
+
+  // Place values in-order into nodes laid out level-by-level.
+  // Build node objects with position; assign values via in-order traversal.
+  const nodes = [];
+  for (let L = 0; L < d; L++) {
+    const count = 1 << L;
+    const slotWidth = W / (count + 1);
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        level: L,
+        index: i,
+        x: slotWidth * (i + 1),
+        y: TOP_MARGIN + L * LEVEL_HEIGHT,
+        value: null,
+        idx: nodes.length, // global index in level-order array
+      });
+    }
+  }
+
+  // Build child relations (level-order: node i has children 2i+1 and 2i+2)
+  nodes.forEach((n, i) => {
+    n.left  = 2 * i + 1 < nodes.length ? 2 * i + 1 : null;
+    n.right = 2 * i + 2 < nodes.length ? 2 * i + 2 : null;
+  });
+
+  // In-order traversal to assign sorted values
+  let counter = 0;
+  function inorder(i) {
+    if (i === null || i >= nodes.length) return;
+    inorder(nodes[i].left);
+    nodes[i].value = values[counter++];
+    inorder(nodes[i].right);
+  }
+  inorder(0);
+
+  return { nodes, totalNodes, depth: d };
+}
+
+let tree = buildTree(depth);
+
+function render(highlightPath = []) {
+  svg.innerHTML = '';
+
+  // edges first
+  tree.nodes.forEach((n, i) => {
+    [n.left, n.right].forEach(childIdx => {
+      if (childIdx === null) return;
+      const c = tree.nodes[childIdx];
+      const onPath = highlightPath.includes(i) && highlightPath.includes(childIdx);
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', n.x);
+      line.setAttribute('y1', n.y);
+      line.setAttribute('x2', c.x);
+      line.setAttribute('y2', c.y);
+      line.setAttribute('class', 'edge' + (onPath ? ' path' : ''));
+      svg.appendChild(line);
+    });
+  });
+
+  // nodes
+  tree.nodes.forEach((n, i) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    let cls = 'node';
+    if (highlightPath.includes(i)) cls += ' path';
+    if (highlightPath.length && highlightPath[highlightPath.length - 1] === i) cls += ' target';
+    g.setAttribute('class', cls);
+
+    const r = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    r.setAttribute('cx', n.x);
+    r.setAttribute('cy', n.y);
+    r.setAttribute('r', tree.depth >= 6 ? 14 : 18);
+    g.appendChild(r);
+
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', n.x);
+    t.setAttribute('y', n.y);
+    t.textContent = n.value;
+    if (tree.depth >= 6) t.setAttribute('font-size', '11');
+    g.appendChild(t);
+
+    svg.appendChild(g);
+  });
+
+  // update stats
+  document.getElementById('nodeCount').textContent = tree.totalNodes;
+  document.getElementById('depthValue').textContent = tree.depth;
+  document.getElementById('logValue').textContent = (Math.floor(Math.log2(tree.totalNodes)) + 1);
+
+  document.getElementById('growBtn').disabled = (tree.depth >= MAX_DEPTH);
+}
+
+function grow() {
+  if (depth >= MAX_DEPTH) return;
+  depth++;
+  tree = buildTree(depth);
+  render();
+}
+
+function reset() {
+  depth = 1;
+  tree = buildTree(depth);
+  render();
+}
+
+// Animate a binary search to a random target
+async function searchRandom() {
+  const target = Math.floor(Math.random() * tree.totalNodes) + 1;
+  const path = [];
+  let i = 0;
+  while (i !== null && i < tree.nodes.length) {
+    path.push(i);
+    const node = tree.nodes[i];
+    if (node.value === target) break;
+    if (target < node.value) i = node.left;
+    else i = node.right;
+  }
+
+  // animate step by step
+  document.getElementById('searchBtn').disabled = true;
+  const partial = [];
+  for (const idx of path) {
+    partial.push(idx);
+    render([...partial]);
+    await new Promise(r => setTimeout(r, 450));
+  }
+  document.getElementById('searchBtn').disabled = false;
+}
+
+render();
+</script>
+</body>
+</html>

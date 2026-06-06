@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Big O Notation — Interactive Graph</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #ffffff;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+  }
+  h1 { font-size: 2rem; margin-bottom: 8px; color: #111; }
+  .subtitle { color: #666; font-style: italic; margin-bottom: 24px; font-size: 1.1rem; }
+  .main-area {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .chart-container {
+    width: 520px;
+    height: 520px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    flex-shrink: 0;
+  }
+  .code-panel {
+    width: 420px;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .code-card {
+    padding: 14px 18px;
+    border-left: 4px solid transparent;
+    border-radius: 8px;
+    background: #f8f8f8;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s, max-height 0.4s, padding 0.4s, margin 0.4s;
+    padding-top: 0; padding-bottom: 0; margin: 0;
+  }
+  .code-card.visible {
+    opacity: 1;
+    max-height: 120px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+  }
+  .code-card .label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+  .code-card code {
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    font-size: 0.85rem;
+    color: #1a1a2e;
+    background: #eef;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    white-space: pre;
+  }
+  .buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  button {
+    padding: 10px 20px;
+    border: 2px solid;
+    border-radius: 8px;
+    background: transparent;
+    color: #333;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.45;
+    transition: opacity 0.2s, background 0.2s;
+  }
+  button.active { opacity: 1; color: #000; }
+  button:hover { opacity: 0.85; }
+  .controls { margin-top: 16px; display: flex; gap: 12px; }
+  .controls button {
+    border-color: #999;
+    opacity: 0.8;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Big O notation</h1>
+<p class="subtitle">"How code slows as data grows."</p>
+
+<div class="main-area">
+  <div class="chart-container">
+    <canvas id="chart"></canvas>
+  </div>
+  <div class="code-panel" id="codePanel"></div>
+</div>
+
+<div class="buttons" id="toggleButtons"></div>
+
+<div class="controls">
+  <button onclick="showNext()">Next curve &#8594;</button>
+  <button onclick="showAll()">Show all</button>
+  <button onclick="hideAll()">Reset</button>
+  <button id="zoomBtn" onclick="toggleZoom()">Zoom in</button>
+</div>
+
+<script>
+const N = 50;
+const labels = Array.from({length: N}, (_, i) => i + 1);
+function gen(fn) { return labels.map(fn); }
+
+const curves = [
+  { label: 'O(1)',       color: '#4ec94e', data: gen(() => 1), comment: '$EmailHashTable["User1234@PSConf.eu"]' },
+  { label: 'O(log n)',   color: '#2e7d32', data: gen(n => Math.log2(n)), comment: '$sortedList | Binary-Search "target"' },
+  { label: 'O(n)',       color: '#f9a825', data: gen(n => n), comment: '$users | Where-Object { $_.City -eq "Berlin" }' },
+  { label: 'O(n log n)', color: '#ff9800', data: gen(n => n * Math.log2(n || 1)), comment: '$users | Sort-Object Name' },
+  { label: 'O(n\u00B2)', color: '#f44336', data: gen(n => n * n), comment: '$a | Where { $_ -in $b }' },
+];
+
+const ctx = document.getElementById('chart').getContext('2d');
+
+const datasets = curves.map(c => ({
+  label: c.label,
+  data: c.data,
+  borderColor: c.color,
+  backgroundColor: c.color + '18',
+  borderWidth: 3,
+  pointRadius: 0,
+  tension: 0.3,
+  hidden: true,
+}));
+
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { labels, datasets },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 600 },
+    scales: {
+      x: {
+        title: { display: true, text: 'data (n)', color: '#555', font: { size: 15, weight: 'bold' } },
+        ticks: { display: false },
+        grid: { display: false },
+        min: 1,
+        max: 50,
+      },
+      y: {
+        title: { display: true, text: 'time (steps)', color: '#555', font: { size: 15, weight: 'bold' } },
+        ticks: { display: false },
+        grid: { display: false },
+        min: 0,
+        max: 55,
+      },
+    },
+    plugins: { legend: { display: false } },
+  },
+});
+
+// Build code cards
+const codePanel = document.getElementById('codePanel');
+curves.forEach((c, i) => {
+  const card = document.createElement('div');
+  card.className = 'code-card';
+  card.style.borderLeftColor = c.color;
+  card.innerHTML = `<div class="label" style="color:${c.color}">${c.label}</div><code>${c.comment}</code>`;
+  codePanel.appendChild(card);
+});
+
+const btnContainer = document.getElementById('toggleButtons');
+curves.forEach((c, i) => {
+  const btn = document.createElement('button');
+  btn.textContent = c.label;
+  btn.style.borderColor = c.color;
+  btn.addEventListener('click', () => toggle(i));
+  btnContainer.appendChild(btn);
+});
+
+function toggle(i) {
+  const meta = chart.getDatasetMeta(i);
+  meta.hidden = !meta.hidden;
+  btnContainer.children[i].classList.toggle('active', !meta.hidden);
+  codePanel.children[i].classList.toggle('visible', !meta.hidden);
+  chart.update();
+}
+
+let nextIndex = 0;
+
+function showNext() {
+  if (nextIndex >= curves.length) return;
+  chart.getDatasetMeta(nextIndex).hidden = false;
+  btnContainer.children[nextIndex].classList.add('active');
+  codePanel.children[nextIndex].classList.add('visible');
+  nextIndex++;
+  chart.update();
+}
+
+function showAll() {
+  curves.forEach((_, i) => {
+    chart.getDatasetMeta(i).hidden = false;
+    btnContainer.children[i].classList.add('active');
+    codePanel.children[i].classList.add('visible');
+  });
+  nextIndex = curves.length;
+  chart.update();
+}
+
+function hideAll() {
+  curves.forEach((_, i) => {
+    chart.getDatasetMeta(i).hidden = true;
+    btnContainer.children[i].classList.remove('active');
+    codePanel.children[i].classList.remove('visible');
+  });
+  nextIndex = 0;
+  chart.update();
+}
+
+let zoomed = false;
+function toggleZoom() {
+  zoomed = !zoomed;
+  chart.options.scales.x.max = zoomed ? 10 : 50;
+  chart.options.scales.y.max = zoomed ? 10 : 55;
+  document.getElementById('zoomBtn').textContent = zoomed ? 'Zoom out' : 'Zoom in';
+  chart.update();
+}
+
+// axes are locked — no rescale needed
+function rescale() {
+  // intentionally empty
+  curves.forEach((c, i) => {
+    if (!chart.getDatasetMeta(i).hidden)
+      maxVal = Math.max(maxVal, Math.max(...c.data));
+  });
+  chart.options.scales.y.suggestedMax = maxVal > 0 ? maxVal * 1.15 : 200;
+}
+</script>
+</body>
+</html>
