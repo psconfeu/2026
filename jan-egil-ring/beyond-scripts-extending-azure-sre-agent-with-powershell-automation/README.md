@@ -27,3 +27,7 @@ This session introduces Azure SRE Agent, Microsoft's AI-driven platform for site
 This session is designed for PowerShell practitioners with Azure experience who want to understand how AI agents can augment their automation workflows. You should be familiar with basic PowerShell scripting and have worked with Azure resources. We'll cover the fundamentals of Azure SRE Agent, its extensibility model, and practical integration patterns that let you bring your existing PowerShell expertise into the agentic automation world.
 
 By the end of this session, you'll understand how to build custom sub-agents, connect SRE Agent to PowerShell-based workflows via MCP, and design hybrid automation solutions that leverage both traditional scripting and AI-driven decision-making. You'll leave with practical examples including: connecting to Azure Automation runbooks for complex orchestration, using Azure Logic Apps with inline PowerShell for rapid integration, calling APIs for custom business logic, and implementing continuous compliance checks that combine Azure Policy with PowerShell validation scripts.
+
+## Speaker
+
+**Jan Egil Ring** — Sr. Cloud Solution Architect, Microsoft. [Speaker profile on Sessionize](https://sessionize.com/janegilring/).
