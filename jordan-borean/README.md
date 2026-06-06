@@ -4,4 +4,14 @@
 
 *Principal Software Engineer - Red Hat/Ansible*
 
-.
+These are my talks done in PSConfEU 2026.
+
+To run them do
+
+``powershell
+pwsh -File Show-DemoPresentation.ps1 -DemoPath ./method-to-the-madness-how-powershell-invokes-net-methods -StartAt 1
+
+pwsh -File Show-DemoPresentation.ps1 -DemoPath ./spawn-of-a-shell-handling-sub-processes -StartAt 1
+```
+
+The `-LightMode` switch can be specified to use a light mode friendly theme.
