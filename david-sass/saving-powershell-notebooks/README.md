@@ -10,7 +10,8 @@ Luckily for us: a small group of previous users and a couple of Microsoft employ
 
 If you are interested to learn more about what is the current state of PowerShell Notebooks and when could you maybe start using them again then this session is for you.
 
-Links:
+## Links
+
 - [Polyglossy GitHub organization](https://github.com/Polyglossy)
 - [Polyglossy Notebooks repository](https://github.com/Polyglossy/interactive)
 - [Polyglossy Notebooks Community on Discord](https://discord.gg/wYuXvZAG)
