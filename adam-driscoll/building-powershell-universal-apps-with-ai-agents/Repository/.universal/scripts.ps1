@@ -1,0 +1,3 @@
+﻿New-PSUScript -Name "Get Processes.ps1" -Description "Get Processes.ps1" -Path "Get Processes.ps1"
+New-PSUScript -Name "Stop Processes.ps1" -Description "Stop Processes.ps1" -Path "Stop Processes.ps1"
+New-PSUScript -Name "Invoke Pester Tests.ps1" -Description "Run Pester tests with optional Pester v5 full-name filtering." -Path "Invoke Pester Tests.ps1" -Role @('Administrator') -ExecutionRole @('Administrator')

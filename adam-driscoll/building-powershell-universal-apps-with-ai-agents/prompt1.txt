@@ -1,0 +1,15 @@
+Create a PowerShell module in my PSU server with functions to collect various information about the PSU Windows server. I will use these functions in other features later on. 
+
+Include:
+- hostname
+- OS version
+- uptime
+- CPU usage
+- memory usage
+- system drive free space
+- pending reboot status
+- automatic services that are stopped
+- recent critical and error events from System and Application logs
+- IIS sites and app pools if IIS is installed
+
+Make the function resilient if IIS is not installed. Name the module `PowerShellUniversal.WindowsServerDiagnostics`
