@@ -1,0 +1,17 @@
+# PowerShell artifacts
+*.swp
+TestResults/
+coverage.xml
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local environment
+*.local.json
+.env
+
+# Local-only docs (instructor planning / superpowers workspace)
+docs/superpowers/

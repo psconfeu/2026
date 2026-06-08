@@ -1,0 +1,12 @@
+[
+  { "id": "SP01", "name": "Jaap Brasser",      "company": "Rubrik",            "twitter": "@jaapbrasser" },
+  { "id": "SP02", "name": "Tobias Weltner",    "company": "powershell.one",    "twitter": "@TobiasPSP" },
+  { "id": "SP03", "name": "Don Jones",         "company": "PluralSight",       "twitter": "@concentrateddon" },
+  { "id": "SP04", "name": "Jeffrey Snover",    "company": "Microsoft (ret.)",  "twitter": "@jsnover" },
+  { "id": "SP05", "name": "Adam Driscoll",     "company": "Ironman Software",  "twitter": "@adamdriscoll" },
+  { "id": "SP06", "name": "Bartek Bielawski",  "company": "Microsoft",         "twitter": "@bielawb" },
+  { "id": "SP07", "name": "Jakub Jares",       "company": "Pester maintainer", "twitter": "@nohwnd" },
+  { "id": "SP08", "name": "Joel Sallow",       "company": "Independent",       "twitter": "@vexx32" },
+  { "id": "SP09", "name": "Robert Prust",      "company": "Wortell",           "twitter": "@powershellpr0mpt" },
+  { "id": "SP10", "name": "Friedrich Weinmann","company": "Microsoft",         "twitter": "@FredWeinmann" }
+]

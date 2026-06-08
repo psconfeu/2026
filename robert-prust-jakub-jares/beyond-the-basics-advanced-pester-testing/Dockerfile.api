@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/powershell:7.4-alpine-3.20
+WORKDIR /app
+COPY api/ ./api/
+EXPOSE 5000
+CMD ["pwsh", "-NoProfile", "-File", "./api/Start-Server.ps1", "-Port", "5000"]

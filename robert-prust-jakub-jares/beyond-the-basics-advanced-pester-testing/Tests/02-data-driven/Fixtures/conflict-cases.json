@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "no overlap",
+    "Sessions": [
+      { "Id": "S1", "StartUtc": "2026-05-19T10:00:00Z", "EndUtc": "2026-05-19T10:45:00Z" },
+      { "Id": "S2", "StartUtc": "2026-05-19T11:00:00Z", "EndUtc": "2026-05-19T11:45:00Z" }
+    ],
+    "ExpectedConflictCount": 0,
+    "ExpectedPairs": []
+  },
+  {
+    "Name": "identical times",
+    "Sessions": [
+      { "Id": "S1", "StartUtc": "2026-05-19T10:00:00Z", "EndUtc": "2026-05-19T10:45:00Z" },
+      { "Id": "S2", "StartUtc": "2026-05-19T10:00:00Z", "EndUtc": "2026-05-19T10:45:00Z" }
+    ],
+    "ExpectedConflictCount": 1,
+    "ExpectedPairs": [["S1", "S2"]]
+  }
+]

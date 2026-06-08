@@ -1,0 +1,31 @@
+# Docker Compose for integration + acceptance tests.
+# Used by CI (.github/workflows/ci.yml) and optionally on dev machines.
+#
+# Start the API:        docker compose up -d api
+# Run all tests:        docker compose run --rm --build tests
+# Tear down:            docker compose down
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - '5000:5000'
+    healthcheck:
+      test: ['CMD', 'pwsh', '-NoProfile', '-c', 'Invoke-RestMethod http://localhost:5000/health']
+      interval: 3s
+      retries: 5
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      PSConf_API_URL: http://api:5000
+    volumes:
+      # Surface the NUnit XML on the host so CI can upload it as an artifact.
+      - ./TestResults:/app/TestResults
