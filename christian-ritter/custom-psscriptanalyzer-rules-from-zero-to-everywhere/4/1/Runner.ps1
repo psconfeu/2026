@@ -1,0 +1,1 @@
+Invoke-ScriptAnalyzer -CustomRulePath .\Rules\SnakeCase.psm1 -Path .\TestScript.ps1

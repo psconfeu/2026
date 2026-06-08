@@ -1,0 +1,1 @@
+Invoke-scriptanalyzer -CustomRulePath .\Rules\GraphPermissionScope.psm1 -Path .\TestScript.ps1
