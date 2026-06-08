@@ -1,0 +1,1 @@
+Using the `PowerShellUniversal.WindowsServerDiagnostics`, create API endpoints for the functions. Ensure that we have proper RBAC on each route. Make sure the routes are unique for these endpoints. Use the `-Command` and `-Module` parameters of New-PSUEndpoint.

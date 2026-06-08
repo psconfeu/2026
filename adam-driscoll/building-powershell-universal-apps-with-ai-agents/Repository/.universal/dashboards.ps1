@@ -1,0 +1,1 @@
+﻿New-PSUApp -Name 'Windows Server Diagnostics' -BaseUrl '/apps/windows-server-diagnostics' -FilePath '.universal/windows-server-diagnostics.ps1' -Description 'Visualizes Windows Server Diagnostics data with overview, operational health, and IIS views.' -AutoDeploy

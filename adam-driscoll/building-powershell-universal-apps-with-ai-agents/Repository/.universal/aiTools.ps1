@@ -1,0 +1,1 @@
+﻿New-PSUAiTool -Name 'InvokePesterTests' -Description 'Runs Pester v5 tests in the repository and supports optional full-name wildcard filtering.' -ScriptFullPath 'Invoke Pester Tests.ps1' -Authenticated -Role @('Administrator') -Mcp

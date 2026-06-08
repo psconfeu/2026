@@ -1,0 +1,1 @@
+I want to create an app to visualize my Windows Server Diagnostics data. I have the `PowerShellUniversal.WindowsServerDiagnostics` module installed. Create a new dashboard in PSU for this purpose. Layout the app in a manner that makes sense for the data being visualized.

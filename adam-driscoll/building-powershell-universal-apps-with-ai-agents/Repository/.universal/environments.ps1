@@ -1,0 +1,3 @@
+﻿New-PSUEnvironment -Name "Integrated" -Path "Universal.Server" -Variables @('*') -Description "An environment for running scripts directly in the PowerShell Universal server." 
+New-PSUEnvironment -Name "PowerShell 7" -Variables @('*') -Description "The PowerShell 7 version included with PowerShell Universal." -ProcessStartupScript "Script1.ps1" -Type "PowerShell7" 
+New-PSUEnvironment -Name "Windows PowerShell 5.1" -Variables @('*') -Description "Windows PowerShell 5.1" -Type "WindowsPowerShell"
