@@ -1,5 +1,16 @@
 # Reverse AI-ngineering
 
+## Slides and demo code
+
+Our project repository contains our demo code (including updates) and slides. We will continue to add additional code samples to the repository in future.
+
+**[https://github.com/thorstenbutz/rai](https://github.com/thorstenbutz/rai)**
+		
+Please consider opening the following repositories as well to explore additional concepts.
+
+- [https://github.com/raandree/AgenticOperatingModel](https://github.com/raandree/AgenticOperatingModel)
+- [https://github.com/raandree/CopilotAtelier](https://github.com/raandree/CopilotAtelier)
+
 ## Abstract
 
 Agentic IDEs, from Cursor to Windsurf, from Claude Code to Cline, are here to stay. But have we even recognised the full potential of these new tools? In production environments, a powerful code base with numerous dependencies and arbitrary code can quickly become an overwhelming challenge. It seems tempting to simply reimplement the necessary functions in order to drastically reduce dependencies and complexity. But do we dare to do so?
