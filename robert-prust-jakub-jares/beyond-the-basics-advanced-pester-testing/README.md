@@ -1,15 +1,30 @@
-# Beyond the Basics: Advanced Pester Testing
+# PSConfEU Workshop
 
-## Abstract
+PowerShell client for the PSConfEU Conference API — the worked example for the **Advanced Pester Workshop** at PSConfEU 2026.
 
-Last year, we learned the basics of Pester. This year, it’s time to go pro.
+## What's in here
 
-In this interactive workshop, you will learn features that improve your testing workflow, including:
+- `PSConfEU.psd1` / `PSConfEU.psm1` — the module itself
+- `Public/`, `Private/` — module source
+- `Tests/` — Pester 5 tests, one folder per chapter
+- `api/` — a tiny PowerShell `HttpListener` mock API
+- `build/Invoke-Tests.ps1` — single test runner
+- `.github/workflows/` — GitHub Actions CI examples
 
-* Data-driven tests using foreach
-* Mocking and advanced Mocking
-* Running tests inside containers for clean, reproducible environments
+## Run tests
 
-We will also discuss best practices for organising large test suites with tags and integrating them into automated pipelines.
+```powershell
+pwsh ./build/Invoke-Tests.ps1 -Tag Unit
+```
 
-This practical session will equip you with knowledge that is easy to apply to real-life situations and will help you deliver more reliable code.
+## Workshop chapter map
+
+| # | Chapter | Folder |
+|---|---------|--------|
+| 1 | First Pester test | `Tests/01-first-test/` |
+| 2 | Data-driven tests | `Tests/02-data-driven/` |
+| 3 | Mocking the API | `Tests/03-mocking/` |
+| 4 | Advanced mocking | `Tests/04-advanced-mocking/` |
+| 5 | Integration tests | `Tests/05-integration/` |
+| 6 | Acceptance & tags | `Tests/06-acceptance-and-tags/` |
+| 7 | CI | `.github/workflows/` (demo-led, no test folder) |

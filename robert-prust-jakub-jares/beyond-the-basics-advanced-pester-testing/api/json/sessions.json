@@ -1,0 +1,17 @@
+[
+  { "id":"S001","title":"Pester for the Brave",                "speakerId":"SP07","track":"Testing",   "roomId":"R1","day":"2026-05-19","startTime":"2026-05-19T08:00:00Z","endTime":"2026-05-19T08:45:00Z" },
+  { "id":"S002","title":"Stop Mocking Around: Advanced Mocks", "speakerId":"SP07","track":"Testing",   "roomId":"R1","day":"2026-05-19","startTime":"2026-05-19T09:00:00Z","endTime":"2026-05-19T09:45:00Z" },
+  { "id":"S003","title":"Why I Still Love DSC",                "speakerId":"SP04","track":"Platform",  "roomId":"R2","day":"2026-05-19","startTime":"2026-05-19T08:00:00Z","endTime":"2026-05-19T08:45:00Z" },
+  { "id":"S004","title":"PowerShell Classes Without Tears",    "speakerId":"SP08","track":"Language",  "roomId":"R3","day":"2026-05-19","startTime":"2026-05-19T08:00:00Z","endTime":"2026-05-19T08:45:00Z" },
+  { "id":"S005","title":"From Script to Module in 45 Minutes", "speakerId":"SP02","track":"Modules",   "roomId":"R2","day":"2026-05-19","startTime":"2026-05-19T09:00:00Z","endTime":"2026-05-19T09:45:00Z" },
+  { "id":"S006","title":"PSUniversal Deep Dive",               "speakerId":"SP05","track":"Tools",     "roomId":"R3","day":"2026-05-19","startTime":"2026-05-19T09:00:00Z","endTime":"2026-05-19T09:45:00Z" },
+  { "id":"S007","title":"What Snover Got Right",               "speakerId":"SP03","track":"Keynote",   "roomId":"R1","day":"2026-05-19","startTime":"2026-05-19T10:00:00Z","endTime":"2026-05-19T11:00:00Z" },
+  { "id":"S008","title":"Cmdlet Design at Scale",              "speakerId":"SP10","track":"Modules",   "roomId":"R2","day":"2026-05-20","startTime":"2026-05-20T08:00:00Z","endTime":"2026-05-20T08:45:00Z" },
+  { "id":"S009","title":"Pester Pipelines Done Right",         "speakerId":"SP01","track":"Testing",   "roomId":"R1","day":"2026-05-20","startTime":"2026-05-20T08:00:00Z","endTime":"2026-05-20T08:45:00Z" },
+  { "id":"S010","title":"Containerised PowerShell",            "speakerId":"SP09","track":"Platform",  "roomId":"R3","day":"2026-05-20","startTime":"2026-05-20T08:00:00Z","endTime":"2026-05-20T08:45:00Z" },
+  { "id":"S011","title":"Cross-Plat Quirks",                   "speakerId":"SP06","track":"Platform",  "roomId":"R2","day":"2026-05-20","startTime":"2026-05-20T09:00:00Z","endTime":"2026-05-20T09:45:00Z" },
+  { "id":"S012","title":"Workshop: Pester from Zero",          "speakerId":"SP09","track":"Workshop",  "roomId":"R4","day":"2026-05-19","startTime":"2026-05-19T13:00:00Z","endTime":"2026-05-19T16:00:00Z" },
+  { "id":"S013","title":"PSReadLine Tips & Tricks",            "speakerId":"SP02","track":"Language",  "roomId":"R3","day":"2026-05-20","startTime":"2026-05-20T09:00:00Z","endTime":"2026-05-20T09:45:00Z" },
+  { "id":"S014","title":"PSResourceGet for Real",              "speakerId":"SP10","track":"Modules",   "roomId":"R2","day":"2026-05-20","startTime":"2026-05-20T10:00:00Z","endTime":"2026-05-20T10:45:00Z" },
+  { "id":"S015","title":"Closing Panel",                       "speakerId":"SP04","track":"Keynote",   "roomId":"R1","day":"2026-05-20","startTime":"2026-05-20T16:00:00Z","endTime":"2026-05-20T17:00:00Z" }
+]

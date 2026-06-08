@@ -1,0 +1,62 @@
+[
+  {
+    "Id": "S01",
+    "Title": "Getting Started with Pester",
+    "Speaker": "Jakub Jareš",
+    "Track": "Testing",
+    "Room": "R1",
+    "StartTime": "2026-05-19T08:00:00Z",
+    "EndTime": "2026-05-19T08:45:00Z",
+    "Description": "Learn the basics of the Pester testing framework for PowerShell."
+  },
+  {
+    "Id": "S02",
+    "Title": "Advanced Mocking Patterns",
+    "Speaker": "Robert Prust",
+    "Track": "Testing",
+    "Room": "R1",
+    "StartTime": "2026-05-19T09:00:00Z",
+    "EndTime": "2026-05-19T09:45:00Z",
+    "Description": "Deep dive into Mock, Should -Invoke, and ParameterFilter."
+  },
+  {
+    "Id": "S03",
+    "Title": "Building Modules That Scale",
+    "Speaker": "Chris Dent",
+    "Track": "Modules",
+    "Room": "R2",
+    "StartTime": "2026-05-19T08:00:00Z",
+    "EndTime": "2026-05-19T08:45:00Z",
+    "Description": "Module design patterns for large PowerShell projects."
+  },
+  {
+    "Id": "S04",
+    "Title": "CI/CD with GitHub Actions",
+    "Speaker": "Friedrich Weinmann",
+    "Track": "Platform",
+    "Room": "R3",
+    "StartTime": "2026-05-19T08:00:00Z",
+    "EndTime": "2026-05-19T08:45:00Z",
+    "Description": "Automate your PowerShell pipeline with GitHub Actions."
+  },
+  {
+    "Id": "S05",
+    "Title": "DSC v3 — What Changed",
+    "Speaker": "Steve Lee",
+    "Track": "Platform",
+    "Room": "R3",
+    "StartTime": "2026-05-19T09:00:00Z",
+    "EndTime": "2026-05-19T09:45:00Z",
+    "Description": "The new Desired State Configuration engine in PowerShell 7."
+  },
+  {
+    "Id": "S06",
+    "Title": "Error Handling Done Right",
+    "Speaker": "Joel Sallow",
+    "Track": "Modules",
+    "Room": "R2",
+    "StartTime": "2026-05-19T09:00:00Z",
+    "EndTime": "2026-05-19T09:45:00Z",
+    "Description": "Terminating vs non-terminating errors and how to handle both."
+  }
+]

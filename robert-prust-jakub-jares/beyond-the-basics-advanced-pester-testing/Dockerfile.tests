@@ -1,0 +1,8 @@
+FROM mcr.microsoft.com/powershell:7.4-alpine-3.20
+WORKDIR /app
+COPY . .
+RUN pwsh -NoProfile -c 'Set-PSRepository PSGallery -InstallationPolicy Trusted; Install-Module Pester -MinimumVersion 5.5.0 -Force -SkipPublisherCheck'
+# Use -Command (not -File) so PowerShell parses the comma-separated -Tag list
+# into a string[] array. With -File each argv is bound literally, so
+# "Unit,Integration,Acceptance" would arrive as a single tag and match nothing.
+CMD ["pwsh", "-NoProfile", "-Command", "./build/Invoke-Tests.ps1 -Tag Unit,Integration,Acceptance -OutputFile TestResults/integration.xml"]

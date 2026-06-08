@@ -1,0 +1,6 @@
+[
+  { "id": "R1", "name": "Aurora",  "capacity": 200 },
+  { "id": "R2", "name": "Borealis","capacity": 120 },
+  { "id": "R3", "name": "Cosmos",  "capacity": 80 },
+  { "id": "R4", "name": "Delta",   "capacity": 50 }
+]
