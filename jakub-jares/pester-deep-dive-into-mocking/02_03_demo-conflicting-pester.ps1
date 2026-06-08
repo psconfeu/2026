@@ -9,9 +9,9 @@ $metadata = [System.Management.Automation.CommandMetadata]::new(
 $param = $metadata.Parameters["PSEdition"]
 $param.Name = "_PSEdition"
 ### Fix: add original name as alias
-$param.Aliases.Add("PSEdition")
-$metadata.Parameters.Remove("PSEdition")
-$null = $metadata.Parameters.Add("_PSEdition", $param)
+# $param.Aliases.Add("PSEdition")
+# $metadata.Parameters.Remove("PSEdition")
+# $null = $metadata.Parameters.Add("_PSEdition", $param)
 
 $paramBlock = [System.Management.Automation.ProxyCommand]::GetParamBlock(
     $metadata)

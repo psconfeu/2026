@@ -17,7 +17,7 @@ New-Module -Name Greeter -ScriptBlock {
             # inject bound params into the CALLER's script scope
             # — that's where $ParameterFilter is probably bound.
             foreach ($p in $call.GetEnumerator()) {
-                $PSCmdlet.SessionState.PSVariable.Set($p.Key, $p.Value) 
+                # $PSCmdlet.SessionState.PSVariable.Set($p.Key, $p.Value)
             }
             if (& $ParameterFilter) {
                 "matched: Name=$($call.Name)"
