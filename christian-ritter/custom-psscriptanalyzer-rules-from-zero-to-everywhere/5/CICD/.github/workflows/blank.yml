@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze PowerShell Scripts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run ScriptAnalyzer For SnakeCase Detection
+
+        shell: pwsh
+        run: |
+
+          # Path to your custom rules
+          $customRulePath = Join-Path $PWD ".rules"
+
+          Write-Host "Using custom rules from: $customRulePath"
+          Write-Host "Current directory: $PWD"
+
+          # Analyze repository
+          $Result =invoke-ScriptAnalyzer -Path $PWD -CustomRulePath $customRulePath\Check_For_SnakeCase.psm1
+
+          # Output results
+          if ($Result) {
+              $Result | Format-Table
+
+              Write-Error "PSScriptAnalyzer found violations."
+              exit 1
+          }
+
+          Write-Host "No ScriptAnalyzer issues found."
+      - name: Run ScriptAnalyzer For Bad Examples
+
+        shell: pwsh
+        run: |
+
+          # Path to your custom rules
+          $customRulePath = Join-Path $PWD ".rules"
+
+          Write-Host "Using custom rules from: $customRulePath"
+          Write-Host "Current directory: $PWD"
+
+          # Analyze repository
+          $Result =invoke-ScriptAnalyzer -Path $PWD -CustomRulePath $customRulePath\Example_Analyzer.psm1
+
+          # Output results
+          if ($Result) {
+              $Result | Format-Table
+
+              Write-Error "PSScriptAnalyzer found violations."
+              exit 1
+          }
+
+          Write-Host "No ScriptAnalyzer issues found."
+    

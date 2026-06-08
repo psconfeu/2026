@@ -1,0 +1,1 @@
+Invoke-ScriptAnalyzer -CustomRulePath .\Rules\ExampleAnalyzer.psm1 -Path .\TestScript.ps1
