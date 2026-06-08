@@ -8,3 +8,10 @@ In this session, we'll combine the power of PwshSpectreConsole with the Microsof
 
 Why attend? 
 Because dealing with cloud APIs in a TUI requires many more considerations than building an offline application, and in this session, we'll talk about background API calls and caching required to enable responsiveness.
+
+## Links
+
+- [PwshSpectreConsole](https://pwshspectreconsole.com/)
+- [PwshXDRSpectre](https://github.com/sassdawe/PwshXDRSpectre)
+
+![$Visitor.count](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2Fpsconfeu%2F2026%2Fdavid-sass%2Fbuilding-security-automation-with-pwshspectreconsole%2FREADME.md&countColor=%23263759)
