@@ -7,3 +7,7 @@
 Consultant working with cloud stuff
 
 Andree Renneus: [Speaker profile](https://sessionize.com/andree-renneus/) on Sessionize
+
+## Code & Slides
+
+[trackd/talks](https://github.com/trackd/talks)
