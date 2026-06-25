@@ -1,3 +1,6 @@
+# This code is released under the CC0 1.0 Universal Public Domain Dedication.
+# See the LICENSE file in the project root for more information.
+
 function Write-CrashDump {
   param(
     [Parameter(Mandatory)]
@@ -31,7 +34,7 @@ function Write-CrashDump {
 
   $allVariables | Sort-Object Name | Format-Table Name, @{
     Name       = 'Type'
-    Expression = { $_.Value?.GetType()?.FullName }
+    Expression = {     if ($_.Value -ne $null) { $_.Value.GetType().FullName } }
   }, Value -AutoSize | Out-File (Join-Path $dumpRoot 'Variables.txt') -Width 5000
 
   $allVariables | Export-Clixml (Join-Path $dumpRoot 'Variables.xml')
